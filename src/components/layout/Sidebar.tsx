@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   Home, 
@@ -15,9 +15,11 @@ import {
   Receipt
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import CreateDropdown from './CreateDropdown';
 
 const Sidebar = () => {
   const location = useLocation();
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
   
   const navigationItems = [
     { name: 'Home', icon: <Home className="h-5 w-5" />, path: '/' },
@@ -39,11 +41,18 @@ const Sidebar = () => {
         </Link>
       </div>
       
-      <div className="px-3 py-4">
-        <Button className="w-full bg-taskloop-gray hover:bg-taskloop-darkgray flex gap-2">
+      <div className="px-3 py-4 relative">
+        <Button 
+          className="w-full bg-taskloop-gray hover:bg-taskloop-darkgray flex gap-2"
+          onClick={() => setIsCreateOpen(!isCreateOpen)}
+        >
           <Plus className="h-4 w-4" />
           Create
         </Button>
+        <CreateDropdown 
+          isOpen={isCreateOpen} 
+          onClose={() => setIsCreateOpen(false)} 
+        />
       </div>
       
       <div className="flex-1 overflow-y-auto py-2">

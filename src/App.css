@@ -1,42 +1,35 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+
+/* Your existing CSS */
+
+/* Add dropdown menu styles */
+.create-dropdown {
+  transform-origin: top left;
+  animation: fadeIn 0.2s ease-in-out;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
+@keyframes fadeIn {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: scale(0.95);
   }
   to {
-    transform: rotate(360deg);
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.sidebar-link {
+  @apply flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900;
 }
 
-.card {
-  padding: 2em;
+.sidebar-link.active {
+  @apply bg-taskloop-gray/10 text-taskloop-darkgray;
 }
 
-.read-the-docs {
-  color: #888;
+.sidebar-link svg {
+  @apply mr-3 h-5 w-5 text-gray-500;
+}
+
+.sidebar-link.active svg {
+  @apply text-taskloop-gray;
 }
