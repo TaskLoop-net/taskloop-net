@@ -34,12 +34,12 @@ const Sidebar = () => {
     <div className="w-64 min-h-screen bg-white border-r border-gray-200 flex flex-col">
       <div className="p-4 flex items-center">
         <Link to="/" className="flex items-center">
-          <div className="text-2xl font-bold text-taskloop-blue">Task<span className="text-taskloop-darkblue">Loop</span></div>
+          <div className="text-2xl font-bold text-taskloop-gray">Task<span className="text-taskloop-darkgray">Loop</span></div>
         </Link>
       </div>
       
       <div className="px-3 py-4">
-        <Button className="w-full bg-taskloop-blue hover:bg-taskloop-darkblue flex gap-2">
+        <Button className="w-full bg-taskloop-gray hover:bg-taskloop-darkgray flex gap-2">
           <Plus className="h-4 w-4" />
           Create
         </Button>
@@ -62,7 +62,7 @@ const Sidebar = () => {
       
       <div className="p-4 border-t border-gray-200">
         <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-full bg-taskloop-blue flex items-center justify-center text-white font-medium">
+          <div className="h-8 w-8 rounded-full bg-taskloop-gray flex items-center justify-center text-white font-medium">
             TL
           </div>
           <div>

@@ -14,20 +14,20 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 210 100% 50%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 220 14% 43%;
+    --primary-foreground: 0 0% 98%;
 
-    --secondary: 210 40% 96.1%;
+    --secondary: 220 13% 91%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --muted: 210 40% 96.1%;
+    --muted: 220 13% 91%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
+    --accent: 220 13% 91%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
@@ -46,7 +46,7 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
+    --primary: 220 14% 43%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
     --secondary: 217.2 32.6% 17.5%;
@@ -80,11 +80,11 @@
 
 @layer components {
   .sidebar-link {
-    @apply flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md hover:bg-taskloop-blue/10 transition-colors;
+    @apply flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md hover:bg-taskloop-gray/10 transition-colors;
   }
   
   .sidebar-link.active {
-    @apply bg-taskloop-blue text-white hover:bg-taskloop-blue;
+    @apply bg-taskloop-gray text-white hover:bg-taskloop-darkgray;
   }
   
   .status-badge {

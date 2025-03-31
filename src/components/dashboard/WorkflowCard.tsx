@@ -21,7 +21,7 @@ const WorkflowCard = ({
   amount, 
   details, 
   path,
-  color = 'bg-taskloop-blue' 
+  color = 'bg-taskloop-gray' 
 }: WorkflowCardProps) => {
   return (
     <Link to={path} className="workflow-card block">

@@ -54,8 +54,8 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				taskloop: {
-					blue: '#0091FF',
-					darkblue: '#005BBB',
+					gray: '#6B7280',
+					darkgray: '#4B5563',
 					lightgray: '#F6F7F9',
 					deepgray: '#3C3F44',
 					green: '#42B983',
