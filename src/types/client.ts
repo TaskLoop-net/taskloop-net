@@ -12,6 +12,15 @@ export interface Client {
   balance: number;
   properties: number;
   createdAt: Date;
+  
+  // Extended fields
+  companyName?: string;
+  useCompanyName?: boolean;
+  firstName?: string;
+  lastName?: string;
+  street1?: string;
+  street2?: string;
+  country?: string;
 }
 
 export interface NewClient {
@@ -23,4 +32,8 @@ export interface NewClient {
   state: string;
   zip: string;
   notes?: string;
+  companyName?: string;
+  useCompanyName?: boolean;
+  firstName?: string;
+  lastName?: string;
 }

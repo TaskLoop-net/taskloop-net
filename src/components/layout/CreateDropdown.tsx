@@ -41,7 +41,7 @@ const CreateDropdown: React.FC<CreateDropdownProps> = ({ isOpen, onClose }) => {
   return (
     <div 
       ref={dropdownRef} 
-      className="absolute left-full ml-2 top-0 z-50 bg-white rounded-lg shadow-lg p-4 w-[360px] border border-gray-200"
+      className="absolute left-full ml-2 top-0 z-50 bg-white rounded-lg shadow-lg p-4 w-[360px] border border-gray-200 create-dropdown"
     >
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-bold text-gray-800">Create</h3>
