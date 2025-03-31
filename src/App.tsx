@@ -52,47 +52,127 @@ function App() {
             <JobProvider>
               <InvoiceProvider>
                 <Routes>
-                  <Route path="/" element={<MainLayout />}>
-                    <Route index element={<Dashboard />} />
-                    <Route path="schedule" element={<Schedule />} />
-                    
-                    <Route path="clients">
-                      <Route index element={<Clients />} />
-                      <Route path=":id" element={<ClientDetail />} />
-                      <Route path="new" element={<NewClient />} />
-                      <Route path=":id/edit" element={<EditClient />} />
-                    </Route>
-                    
-                    <Route path="requests">
-                      <Route index element={<Requests />} />
-                      <Route path=":id" element={<RequestDetail />} />
-                      <Route path="new" element={<NewRequest />} />
-                      <Route path=":id/edit" element={<EditRequest />} />
-                    </Route>
-                    
-                    <Route path="quotes">
-                      <Route index element={<Quotes />} />
-                      <Route path=":id" element={<QuoteDetail />} />
-                      <Route path="new" element={<NewQuote />} />
-                      <Route path=":id/edit" element={<EditQuote />} />
-                    </Route>
-                    
-                    <Route path="jobs">
-                      <Route index element={<Jobs />} />
-                      <Route path=":id" element={<JobDetail />} />
-                      <Route path="new" element={<NewJob />} />
-                      <Route path=":id/edit" element={<EditJob />} />
-                    </Route>
-                    
-                    <Route path="invoices">
-                      <Route index element={<Invoices />} />
-                      <Route path=":id" element={<InvoiceDetail />} />
-                      <Route path="new" element={<NewInvoice />} />
-                      <Route path=":id/edit" element={<EditInvoice />} />
-                    </Route>
-                    
-                    <Route path="*" element={<NotFound />} />
-                  </Route>
+                  <Route path="/" element={
+                    <MainLayout>
+                      <Dashboard />
+                    </MainLayout>
+                  } />
+                  <Route path="/schedule" element={
+                    <MainLayout>
+                      <Schedule />
+                    </MainLayout>
+                  } />
+                  
+                  <Route path="/clients" element={
+                    <MainLayout>
+                      <Clients />
+                    </MainLayout>
+                  } />
+                  <Route path="/clients/:id" element={
+                    <MainLayout>
+                      <ClientDetail />
+                    </MainLayout>
+                  } />
+                  <Route path="/clients/new" element={
+                    <MainLayout>
+                      <NewClient />
+                    </MainLayout>
+                  } />
+                  <Route path="/clients/:id/edit" element={
+                    <MainLayout>
+                      <EditClient />
+                    </MainLayout>
+                  } />
+                  
+                  <Route path="/requests" element={
+                    <MainLayout>
+                      <Requests />
+                    </MainLayout>
+                  } />
+                  <Route path="/requests/:id" element={
+                    <MainLayout>
+                      <RequestDetail />
+                    </MainLayout>
+                  } />
+                  <Route path="/requests/new" element={
+                    <MainLayout>
+                      <NewRequest />
+                    </MainLayout>
+                  } />
+                  <Route path="/requests/:id/edit" element={
+                    <MainLayout>
+                      <EditRequest />
+                    </MainLayout>
+                  } />
+                  
+                  <Route path="/quotes" element={
+                    <MainLayout>
+                      <Quotes />
+                    </MainLayout>
+                  } />
+                  <Route path="/quotes/:id" element={
+                    <MainLayout>
+                      <QuoteDetail />
+                    </MainLayout>
+                  } />
+                  <Route path="/quotes/new" element={
+                    <MainLayout>
+                      <NewQuote />
+                    </MainLayout>
+                  } />
+                  <Route path="/quotes/:id/edit" element={
+                    <MainLayout>
+                      <EditQuote />
+                    </MainLayout>
+                  } />
+                  
+                  <Route path="/jobs" element={
+                    <MainLayout>
+                      <Jobs />
+                    </MainLayout>
+                  } />
+                  <Route path="/jobs/:id" element={
+                    <MainLayout>
+                      <JobDetail />
+                    </MainLayout>
+                  } />
+                  <Route path="/jobs/new" element={
+                    <MainLayout>
+                      <NewJob />
+                    </MainLayout>
+                  } />
+                  <Route path="/jobs/:id/edit" element={
+                    <MainLayout>
+                      <EditJob />
+                    </MainLayout>
+                  } />
+                  
+                  <Route path="/invoices" element={
+                    <MainLayout>
+                      <Invoices />
+                    </MainLayout>
+                  } />
+                  <Route path="/invoices/:id" element={
+                    <MainLayout>
+                      <InvoiceDetail />
+                    </MainLayout>
+                  } />
+                  <Route path="/invoices/new" element={
+                    <MainLayout>
+                      <NewInvoice />
+                    </MainLayout>
+                  } />
+                  <Route path="/invoices/:id/edit" element={
+                    <MainLayout>
+                      <EditInvoice />
+                    </MainLayout>
+                  } />
+                  
+                  <Route path="*" element={
+                    <MainLayout>
+                      <NotFound />
+                    </MainLayout>
+                  } />
                 </Routes>
                 <Toaster />
               </InvoiceProvider>
