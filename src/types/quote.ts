@@ -20,6 +20,18 @@ export interface Quote {
   createdAt: Date;
   validUntil: Date;
   notes?: string;
+  
+  // New fields based on the design
+  quoteNumber?: string;
+  clientMessage?: string;
+  disclaimer?: string;
+  internalNotes?: string;
+  discount?: number;
+  deposit?: number;
+  attachments?: string[];
+  opportunityRating?: number;
+  linkedJobs?: boolean;
+  linkedInvoices?: boolean;
 }
 
 export interface NewQuote {
@@ -30,4 +42,16 @@ export interface NewQuote {
   tax?: number;
   validUntil?: Date;
   notes?: string;
+  
+  // New fields based on the design
+  quoteNumber?: string;
+  clientMessage?: string;
+  disclaimer?: string;
+  internalNotes?: string;
+  discount?: number;
+  deposit?: number;
+  attachments?: string[];
+  opportunityRating?: number;
+  linkedJobs?: boolean;
+  linkedInvoices?: boolean;
 }
