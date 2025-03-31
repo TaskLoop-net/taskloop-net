@@ -1,385 +1,226 @@
 
-import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { 
   User, 
-  MapPin, 
-  Phone, 
   Mail, 
-  File, 
-  PenTool, 
-  Briefcase, 
-  DollarSign,
-  Plus,
-  ChevronLeft
+  Phone, 
+  MapPin, 
+  DollarSign, 
+  Home, 
+  ClipboardList,
+  FileText,
+  Briefcase,
+  ArrowLeft,
+  Edit,
+  Trash
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+
+import { useClients } from '@/contexts/ClientContext';
 
 const ClientDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { getClientById, deleteClient } = useClients();
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   
-  // Mock client data - in a real app, fetch based on the ID
-  const client = {
-    id: id || '1',
-    name: 'Michael Jones',
-    email: 'michael.jones@example.com',
-    phone: '(310) 555-1234',
-    address: '123 Main St, Los Angeles, CA 90001',
-    balance: 1922,
-    properties: [
-      {
-        id: 'p1',
-        address: '123 Main St, Los Angeles, CA 90001',
-        type: 'Residential'
-      },
-      {
-        id: 'p2',
-        address: '456 Business Ave, Los Angeles, CA 90012',
-        type: 'Commercial'
-      }
-    ],
-    requests: [
-      {
-        id: 'r1',
-        title: 'AC Repair',
-        date: '2023-03-15',
-        status: 'Completed'
-      }
-    ],
-    quotes: [
-      {
-        id: 'q1',
-        title: 'Annual Maintenance Contract',
-        date: '2023-03-20',
-        amount: 1200,
-        status: 'Approved'
-      }
-    ],
-    jobs: [
-      {
-        id: 'j1',
-        title: 'Quarterly HVAC Maintenance',
-        date: '2023-03-25',
-        status: 'Scheduled'
-      }
-    ],
-    invoices: [
-      {
-        id: 'i1',
-        number: '#186',
-        date: '2023-03-28',
-        amount: 1922,
-        status: 'Due'
-      }
-    ],
-    notes: [
-      {
-        id: 'n1',
-        text: 'Client prefers morning appointments before 11 AM',
-        createdAt: '2023-02-12',
-        author: 'Alex Rodriguez'
-      }
-    ]
+  const client = getClientById(id || '');
+  
+  if (!client) {
+    return (
+      <div className="text-center py-12">
+        <h2 className="text-xl font-semibold mb-2">Client not found</h2>
+        <p className="text-muted-foreground mb-6">
+          The client you're looking for doesn't exist or has been removed.
+        </p>
+        <Button onClick={() => navigate('/clients')}>
+          Back to Clients
+        </Button>
+      </div>
+    );
+  }
+
+  const handleDeleteClient = () => {
+    deleteClient(client.id);
+    navigate('/clients');
+  };
+
+  const formatDate = (date: Date) => {
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }).format(date);
   };
 
   return (
     <div>
-      <div className="mb-6">
-        <Link to="/clients" className="text-taskloop-blue hover:underline inline-flex items-center mb-3">
-          <ChevronLeft className="h-4 w-4 mr-1" />
-          Back to clients
-        </Link>
+      <div className="flex items-center mb-6 gap-3">
+        <Button variant="ghost" size="sm" onClick={() => navigate('/clients')}>
+          <ArrowLeft className="h-4 w-4 mr-1" />
+          Back
+        </Button>
         
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">{client.name}</h1>
-          <div className="flex space-x-2">
-            <Button variant="outline">
-              <Plus className="h-4 w-4 mr-2" />
-              New Request
-            </Button>
-            <Button className="bg-taskloop-blue hover:bg-taskloop-darkblue">
-              <Plus className="h-4 w-4 mr-2" />
-              New Job
-            </Button>
-          </div>
+        <h1 className="text-2xl font-bold flex-grow">{client.name}</h1>
+        
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" asChild>
+            <Link to={`/clients/${client.id}/edit`}>
+              <Edit className="h-4 w-4 mr-1" />
+              Edit
+            </Link>
+          </Button>
+          
+          <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="destructive" size="sm">
+                <Trash className="h-4 w-4 mr-1" />
+                Delete
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Delete Client</DialogTitle>
+                <DialogDescription>
+                  Are you sure you want to delete {client.name}? This action cannot be undone.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+                  Cancel
+                </Button>
+                <Button variant="destructive" onClick={handleDeleteClient}>
+                  Delete
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div className="lg:col-span-1">
-          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
-            <div className="flex flex-col space-y-4">
-              <div className="mx-auto">
-                <div className="h-20 w-20 rounded-full bg-gray-100 flex items-center justify-center">
-                  <User className="h-10 w-10 text-gray-500" />
-                </div>
-              </div>
-              
-              <div className="mt-2 space-y-3">
-                <div className="flex items-start space-x-2">
-                  <MapPin className="h-5 w-5 text-gray-500 mt-0.5" />
-                  <div className="flex-1">
-                    <p className="text-sm text-gray-600">{client.address}</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center space-x-2">
-                  <Phone className="h-5 w-5 text-gray-500" />
-                  <span className="text-sm text-gray-600">{client.phone}</span>
-                </div>
-                
-                <div className="flex items-center space-x-2">
-                  <Mail className="h-5 w-5 text-gray-500" />
-                  <span className="text-sm text-gray-600">{client.email}</span>
-                </div>
-                
-                <div className="pt-3 border-t border-gray-200">
-                  <div className="flex justify-between mb-1">
-                    <span className="text-sm font-medium">Balance</span>
-                    <span className="text-sm font-semibold text-red-600">${client.balance.toLocaleString()}</span>
-                  </div>
-                  <Button className="w-full text-sm mt-2" variant="outline">View statement</Button>
-                </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Contact Information</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-start">
+              <User className="h-5 w-5 text-gray-400 mr-2 mt-0.5" />
+              <div>
+                <div className="font-medium">{client.name}</div>
+                <div className="text-sm text-gray-500">Client since {formatDate(client.createdAt)}</div>
               </div>
             </div>
-          </div>
-        </div>
+            
+            <div className="flex items-center">
+              <Mail className="h-5 w-5 text-gray-400 mr-2" />
+              <div className="text-sm">{client.email}</div>
+            </div>
+            
+            <div className="flex items-center">
+              <Phone className="h-5 w-5 text-gray-400 mr-2" />
+              <div className="text-sm">{client.phone}</div>
+            </div>
+            
+            <div className="flex items-start">
+              <MapPin className="h-5 w-5 text-gray-400 mr-2 mt-0.5" />
+              <div className="text-sm">
+                {client.address}<br />
+                {client.city}, {client.state} {client.zip}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
         
-        <div className="lg:col-span-3">
-          <Tabs defaultValue="properties">
-            <TabsList className="mb-4">
-              <TabsTrigger value="properties">Properties</TabsTrigger>
-              <TabsTrigger value="requests">Requests</TabsTrigger>
-              <TabsTrigger value="quotes">Quotes</TabsTrigger>
-              <TabsTrigger value="jobs">Jobs</TabsTrigger>
-              <TabsTrigger value="invoices">Invoices</TabsTrigger>
-              <TabsTrigger value="notes">Notes</TabsTrigger>
-            </TabsList>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Account Summary</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <DollarSign className="h-5 w-5 text-gray-400 mr-2" />
+                <div className="text-sm font-medium">Outstanding Balance</div>
+              </div>
+              <div className={`font-semibold ${client.balance > 0 ? 'text-red-600' : 'text-gray-900'}`}>
+                ${client.balance.toLocaleString()}
+              </div>
+            </div>
             
-            <TabsContent value="properties" className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-medium">Properties</h2>
-                <Button size="sm">
-                  <Plus className="h-4 w-4 mr-1" />
-                  Add Property
-                </Button>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Home className="h-5 w-5 text-gray-400 mr-2" />
+                <div className="text-sm font-medium">Properties</div>
               </div>
-              
-              <div className="space-y-3">
-                {client.properties.map(property => (
-                  <div key={property.id} className="p-3 border rounded-md hover:bg-gray-50">
-                    <div className="flex justify-between">
-                      <div>
-                        <p className="font-medium">{property.address}</p>
-                        <p className="text-sm text-gray-600">{property.type}</p>
-                      </div>
-                      <Button variant="ghost" size="sm">View</Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="requests" className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
-              <div className="flex justify-between items-center mb-4">
-                <div className="flex items-center">
-                  <File className="h-5 w-5 text-taskloop-blue mr-2" />
-                  <h2 className="text-lg font-medium">Requests</h2>
-                </div>
-                <Button size="sm">
-                  <Plus className="h-4 w-4 mr-1" />
-                  New Request
-                </Button>
-              </div>
-              
-              {client.requests.length > 0 ? (
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="text-xs text-left text-gray-500 border-b">
-                        <th className="pb-2">Title</th>
-                        <th className="pb-2">Date</th>
-                        <th className="pb-2">Status</th>
-                        <th className="pb-2"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {client.requests.map(request => (
-                        <tr key={request.id} className="border-b">
-                          <td className="py-3">{request.title}</td>
-                          <td className="py-3">{request.date}</td>
-                          <td className="py-3">
-                            <span className="status-badge status-completed">{request.status}</span>
-                          </td>
-                          <td className="py-3 text-right">
-                            <Button variant="ghost" size="sm">View</Button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                <div className="text-center py-8 text-gray-500">No requests found</div>
-              )}
-            </TabsContent>
-            
-            <TabsContent value="quotes" className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
-              <div className="flex justify-between items-center mb-4">
-                <div className="flex items-center">
-                  <PenTool className="h-5 w-5 text-taskloop-blue mr-2" />
-                  <h2 className="text-lg font-medium">Quotes</h2>
-                </div>
-                <Button size="sm">
-                  <Plus className="h-4 w-4 mr-1" />
-                  New Quote
-                </Button>
-              </div>
-              
-              {client.quotes.length > 0 ? (
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="text-xs text-left text-gray-500 border-b">
-                        <th className="pb-2">Title</th>
-                        <th className="pb-2">Date</th>
-                        <th className="pb-2">Amount</th>
-                        <th className="pb-2">Status</th>
-                        <th className="pb-2"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {client.quotes.map(quote => (
-                        <tr key={quote.id} className="border-b">
-                          <td className="py-3">{quote.title}</td>
-                          <td className="py-3">{quote.date}</td>
-                          <td className="py-3">${quote.amount}</td>
-                          <td className="py-3">
-                            <span className="status-badge status-in-progress">{quote.status}</span>
-                          </td>
-                          <td className="py-3 text-right">
-                            <Button variant="ghost" size="sm">View</Button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                <div className="text-center py-8 text-gray-500">No quotes found</div>
-              )}
-            </TabsContent>
-            
-            <TabsContent value="jobs" className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
-              <div className="flex justify-between items-center mb-4">
-                <div className="flex items-center">
-                  <Briefcase className="h-5 w-5 text-taskloop-blue mr-2" />
-                  <h2 className="text-lg font-medium">Jobs</h2>
-                </div>
-                <Button size="sm">
-                  <Plus className="h-4 w-4 mr-1" />
-                  New Job
-                </Button>
-              </div>
-              
-              {client.jobs.length > 0 ? (
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="text-xs text-left text-gray-500 border-b">
-                        <th className="pb-2">Title</th>
-                        <th className="pb-2">Date</th>
-                        <th className="pb-2">Status</th>
-                        <th className="pb-2"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {client.jobs.map(job => (
-                        <tr key={job.id} className="border-b">
-                          <td className="py-3">{job.title}</td>
-                          <td className="py-3">{job.date}</td>
-                          <td className="py-3">
-                            <span className="status-badge status-pending">{job.status}</span>
-                          </td>
-                          <td className="py-3 text-right">
-                            <Button variant="ghost" size="sm">View</Button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                <div className="text-center py-8 text-gray-500">No jobs found</div>
-              )}
-            </TabsContent>
-            
-            <TabsContent value="invoices" className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
-              <div className="flex justify-between items-center mb-4">
-                <div className="flex items-center">
-                  <DollarSign className="h-5 w-5 text-taskloop-blue mr-2" />
-                  <h2 className="text-lg font-medium">Invoices</h2>
-                </div>
-                <Button size="sm">
-                  <Plus className="h-4 w-4 mr-1" />
-                  New Invoice
-                </Button>
-              </div>
-              
-              {client.invoices.length > 0 ? (
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="text-xs text-left text-gray-500 border-b">
-                        <th className="pb-2">Number</th>
-                        <th className="pb-2">Date</th>
-                        <th className="pb-2">Amount</th>
-                        <th className="pb-2">Status</th>
-                        <th className="pb-2"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {client.invoices.map(invoice => (
-                        <tr key={invoice.id} className="border-b">
-                          <td className="py-3">{invoice.number}</td>
-                          <td className="py-3">{invoice.date}</td>
-                          <td className="py-3">${invoice.amount}</td>
-                          <td className="py-3">
-                            <span className="status-badge status-overdue">{invoice.status}</span>
-                          </td>
-                          <td className="py-3 text-right">
-                            <Button variant="ghost" size="sm">View</Button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                <div className="text-center py-8 text-gray-500">No invoices found</div>
-              )}
-            </TabsContent>
-            
-            <TabsContent value="notes" className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-medium">Notes</h2>
-                <Button size="sm">Add Note</Button>
-              </div>
-              
-              {client.notes.map(note => (
-                <div key={note.id} className="p-4 border rounded-lg mb-3">
-                  <p className="text-sm mb-2">{note.text}</p>
-                  <div className="flex justify-between text-xs text-gray-500">
-                    <span>{note.author}</span>
-                    <span>{note.createdAt}</span>
-                  </div>
-                </div>
-              ))}
-            </TabsContent>
-          </Tabs>
-        </div>
+              <div>{client.properties}</div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Notes</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-gray-600">
+              {client.notes || 'No notes added yet.'}
+            </p>
+          </CardContent>
+        </Card>
       </div>
+      
+      <Tabs defaultValue="jobs" className="w-full">
+        <TabsList className="mb-4">
+          <TabsTrigger value="jobs">
+            <Briefcase className="h-4 w-4 mr-1" />
+            Jobs
+          </TabsTrigger>
+          <TabsTrigger value="quotes">
+            <FileText className="h-4 w-4 mr-1" />
+            Quotes
+          </TabsTrigger>
+          <TabsTrigger value="requests">
+            <ClipboardList className="h-4 w-4 mr-1" />
+            Requests
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="jobs" className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="text-center py-10">
+            <h3 className="text-lg font-medium mb-2">No jobs yet</h3>
+            <p className="text-gray-500 mb-4">This client doesn't have any jobs created yet.</p>
+            <Button>Create a Job</Button>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="quotes" className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="text-center py-10">
+            <h3 className="text-lg font-medium mb-2">No quotes yet</h3>
+            <p className="text-gray-500 mb-4">This client doesn't have any quotes created yet.</p>
+            <Button>Create a Quote</Button>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="requests" className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="text-center py-10">
+            <h3 className="text-lg font-medium mb-2">No requests yet</h3>
+            <p className="text-gray-500 mb-4">This client doesn't have any requests created yet.</p>
+            <Button>Create a Request</Button>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

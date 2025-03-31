@@ -1,69 +1,33 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Users, Plus, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Link } from 'react-router-dom';
-
-interface Client {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-  balance: number;
-  properties: number;
-}
+import { Link, useNavigate } from 'react-router-dom';
+import { useClients } from '@/contexts/ClientContext';
 
 const Clients = () => {
-  // Sample client data
-  const clients: Client[] = [
-    {
-      id: '1',
-      name: 'Michael Jones',
-      email: 'michael.jones@example.com',
-      phone: '(310) 555-1234',
-      address: '123 Main St, Los Angeles, CA',
-      balance: 1922,
-      properties: 2
-    },
-    {
-      id: '2',
-      name: 'Rafael Honda',
-      email: 'rafael.honda@example.com',
-      phone: '(213) 555-5678',
-      address: '456 Oak Ave, Los Angeles, CA',
-      balance: 850,
-      properties: 1
-    },
-    {
-      id: '3',
-      name: 'Tiago Charbel',
-      email: 'tiago.charbel@example.com',
-      phone: '(323) 555-9012',
-      address: '789 Pine St, Los Angeles, CA',
-      balance: 11500,
-      properties: 3
-    },
-    {
-      id: '4',
-      name: 'Neena Tikoo',
-      email: 'neena.tikoo@example.com',
-      phone: '(424) 555-3456',
-      address: '101 Maple Dr, Los Angeles, CA',
-      balance: 0,
-      properties: 1
-    },
-  ];
+  const { clients } = useClients();
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  const filteredClients = clients.filter(client => 
+    client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    client.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    client.phone.includes(searchTerm)
+  );
 
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center">
-          <Users className="h-6 w-6 text-taskloop-blue mr-2" />
+          <Users className="h-6 w-6 text-taskloop-gray mr-2" />
           <h1 className="text-2xl font-bold">Clients</h1>
         </div>
-        <Button className="bg-taskloop-blue hover:bg-taskloop-darkblue">
+        <Button 
+          className="bg-taskloop-gray hover:bg-taskloop-darkgray"
+          onClick={() => navigate('/clients/new')}
+        >
           <Plus className="h-4 w-4 mr-2" />
           New Client
         </Button>
@@ -76,6 +40,8 @@ const Clients = () => {
             <Input 
               className="pl-10" 
               placeholder="Search clients..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
         </div>
@@ -94,35 +60,43 @@ const Clients = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {clients.map((client) => (
-                <tr key={client.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-4 whitespace-nowrap">
-                    <div className="font-medium text-gray-900">{client.name}</div>
-                  </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {client.email}
-                  </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {client.phone}
-                  </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {client.address}
-                  </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-right">
-                    <span className={`${client.balance > 0 ? 'text-red-600' : 'text-gray-900'}`}>
-                      ${client.balance.toLocaleString()}
-                    </span>
-                  </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-center">
-                    {client.properties}
-                  </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-right">
-                    <Button variant="ghost" size="sm" asChild>
-                      <Link to={`/clients/${client.id}`}>View</Link>
-                    </Button>
+              {filteredClients.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="px-4 py-6 text-center text-gray-500">
+                    {searchTerm ? 'No clients found matching your search' : 'No clients yet'}
                   </td>
                 </tr>
-              ))}
+              ) : (
+                filteredClients.map((client) => (
+                  <tr key={client.id} className="hover:bg-gray-50">
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      <div className="font-medium text-gray-900">{client.name}</div>
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">
+                      {client.email}
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">
+                      {client.phone}
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">
+                      {client.address}, {client.city}, {client.state} {client.zip}
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap text-right">
+                      <span className={`${client.balance > 0 ? 'text-red-600' : 'text-gray-900'}`}>
+                        ${client.balance.toLocaleString()}
+                      </span>
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap text-center">
+                      {client.properties}
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap text-right">
+                      <Button variant="ghost" size="sm" asChild>
+                        <Link to={`/clients/${client.id}`}>View</Link>
+                      </Button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
