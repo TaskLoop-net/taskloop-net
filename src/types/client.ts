@@ -36,4 +36,7 @@ export interface NewClient {
   useCompanyName?: boolean;
   firstName?: string;
   lastName?: string;
+  street1?: string;
+  street2?: string;
+  country?: string;
 }
