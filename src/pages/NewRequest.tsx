@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,7 +13,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useRequests } from '@/contexts/RequestContext';
 import { useClients } from '@/contexts/ClientContext';
-import { NewRequest } from '@/types/request';
+import type { NewRequest } from '@/types/request';
 
 const requestFormSchema = z.object({
   title: z.string().min(3, { message: "Title must be at least 3 characters" }),
