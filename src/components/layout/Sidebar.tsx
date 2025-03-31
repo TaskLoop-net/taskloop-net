@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -68,18 +67,6 @@ const Sidebar = () => {
             </Link>
           ))}
         </nav>
-      </div>
-      
-      <div className="p-4 border-t border-gray-200">
-        <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-full bg-taskloop-gray flex items-center justify-center text-white font-medium">
-            TL
-          </div>
-          <div>
-            <p className="text-sm font-medium">Task Loop</p>
-            <p className="text-xs text-gray-500">Los Angeles, CA</p>
-          </div>
-        </div>
       </div>
     </div>
   );
