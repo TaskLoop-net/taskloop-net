@@ -9,8 +9,8 @@ export interface Job {
   startDate: Date;
   endDate?: Date;
   scheduledTime?: {
-    startTime: string;
-    endTime: string;
+    startTime?: string;
+    endTime?: string;
   };
   teamMembers: string[];
   lineItems: LineItem[];

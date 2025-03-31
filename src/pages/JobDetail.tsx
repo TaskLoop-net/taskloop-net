@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { format } from 'date-fns';
@@ -128,7 +127,9 @@ const JobDetail = () => {
       <Breadcrumb className="mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink as={Link} to="/jobs">Jobs</BreadcrumbLink>
+            <BreadcrumbLink asChild>
+              <Link to="/jobs">Jobs</Link>
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
@@ -149,7 +150,6 @@ const JobDetail = () => {
         </div>
         
         <div className="flex gap-2">
-          {/* Status Update Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline">
@@ -177,7 +177,6 @@ const JobDetail = () => {
             </DropdownMenuContent>
           </DropdownMenu>
           
-          {/* Actions Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline">

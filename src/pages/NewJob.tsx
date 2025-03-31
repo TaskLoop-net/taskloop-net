@@ -118,7 +118,16 @@ const NewJob = () => {
       const job = addJob({
         ...values,
         lineItems,
-        totalPrice: parseFloat(calculateTotal())
+        totalPrice: parseFloat(calculateTotal()),
+        // Ensure required fields are present
+        title: values.title,
+        description: values.description || "",
+        clientId: values.clientId,
+        type: values.type,
+        status: values.status,
+        startDate: values.startDate,
+        teamMembers: values.teamMembers || [],
+        invoiceOnCompletion: values.invoiceOnCompletion || false
       });
       
       toast({

@@ -153,7 +153,14 @@ const EditJob = () => {
       updateJob(job.id, {
         ...values,
         lineItems,
-        totalPrice: parseFloat(calculateTotal())
+        totalPrice: parseFloat(calculateTotal()),
+        // Ensure the type is properly set
+        title: values.title,
+        description: values.description || "",
+        clientId: values.clientId,
+        type: values.type,
+        status: values.status,
+        startDate: values.startDate
       });
       
       toast({
