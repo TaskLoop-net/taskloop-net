@@ -11,7 +11,8 @@ import {
   DollarSign,
   Settings,
   BarChart,
-  Plus
+  Plus,
+  Receipt
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -25,7 +26,7 @@ const Sidebar = () => {
     { name: 'Requests', icon: <FileText className="h-5 w-5" />, path: '/requests' },
     { name: 'Jobs', icon: <Briefcase className="h-5 w-5" />, path: '/jobs' },
     { name: 'Quotes', icon: <PenTool className="h-5 w-5" />, path: '/quotes' },
-    { name: 'Invoices', icon: <DollarSign className="h-5 w-5" />, path: '/invoices' },
+    { name: 'Invoices', icon: <Receipt className="h-5 w-5" />, path: '/invoices' },
     { name: 'Marketing', icon: <BarChart className="h-5 w-5" />, path: '/marketing' },
     { name: 'Insights', icon: <BarChart className="h-5 w-5" />, path: '/insights' },
   ];

@@ -1,200 +1,107 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import MainLayout from "./components/layout/MainLayout";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./App.css";
+
+import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
-import Schedule from "./pages/Schedule";
 import Clients from "./pages/Clients";
-import NewClient from "./pages/NewClient";
 import ClientDetail from "./pages/ClientDetail";
+import NewClient from "./pages/NewClient";
 import EditClient from "./pages/EditClient";
-import Quotes from "./pages/Quotes";
-import NewQuote from "./pages/NewQuote";
-import QuoteDetail from "./pages/QuoteDetail";
-import EditQuote from "./pages/EditQuote";
+
+import Schedule from "./pages/Schedule";
+
 import Requests from "./pages/Requests";
-import NewRequest from "./pages/NewRequest";
 import RequestDetail from "./pages/RequestDetail";
+import NewRequest from "./pages/NewRequest";
 import EditRequest from "./pages/EditRequest";
+
+import Quotes from "./pages/Quotes";
+import QuoteDetail from "./pages/QuoteDetail";
+import NewQuote from "./pages/NewQuote";
+import EditQuote from "./pages/EditQuote";
+
 import Jobs from "./pages/Jobs";
-import NewJob from "./pages/NewJob";
 import JobDetail from "./pages/JobDetail";
+import NewJob from "./pages/NewJob";
 import EditJob from "./pages/EditJob";
+
+import Invoices from "./pages/Invoices";
+import InvoiceDetail from "./pages/InvoiceDetail";
+import NewInvoice from "./pages/NewInvoice";
+import EditInvoice from "./pages/EditInvoice";
+
 import NotFound from "./pages/NotFound";
+
+import MainLayout from "./components/layout/MainLayout";
+
 import { ClientProvider } from "./contexts/ClientContext";
-import { QuoteProvider } from "./contexts/QuoteContext";
 import { RequestProvider } from "./contexts/RequestContext";
+import { QuoteProvider } from "./contexts/QuoteContext";
 import { JobProvider } from "./contexts/JobContext";
+import { InvoiceProvider } from "./contexts/InvoiceContext";
 
-const queryClient = new QueryClient();
+import { Toaster } from "./components/ui/toaster";
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ClientProvider>
-      <QuoteProvider>
+function App() {
+  return (
+    <Router>
+      <ClientProvider>
         <RequestProvider>
-          <JobProvider>
-            <TooltipProvider>
-              <Toaster />
-              <Sonner />
-              <BrowserRouter>
+          <QuoteProvider>
+            <JobProvider>
+              <InvoiceProvider>
                 <Routes>
-                  <Route 
-                    path="/" 
-                    element={
-                      <MainLayout>
-                        <Dashboard />
-                      </MainLayout>
-                    } 
-                  />
-                  <Route 
-                    path="/schedule" 
-                    element={
-                      <MainLayout>
-                        <Schedule />
-                      </MainLayout>
-                    } 
-                  />
-                  <Route 
-                    path="/clients" 
-                    element={
-                      <MainLayout>
-                        <Clients />
-                      </MainLayout>
-                    } 
-                  />
-                  <Route 
-                    path="/clients/new" 
-                    element={
-                      <MainLayout>
-                        <NewClient />
-                      </MainLayout>
-                    } 
-                  />
-                  <Route 
-                    path="/clients/:id" 
-                    element={
-                      <MainLayout>
-                        <ClientDetail />
-                      </MainLayout>
-                    } 
-                  />
-                  <Route 
-                    path="/clients/:id/edit" 
-                    element={
-                      <MainLayout>
-                        <EditClient />
-                      </MainLayout>
-                    } 
-                  />
-                  <Route 
-                    path="/requests" 
-                    element={
-                      <MainLayout>
-                        <Requests />
-                      </MainLayout>
-                    } 
-                  />
-                  <Route 
-                    path="/requests/new" 
-                    element={
-                      <MainLayout>
-                        <NewRequest />
-                      </MainLayout>
-                    } 
-                  />
-                  <Route 
-                    path="/requests/:id" 
-                    element={
-                      <MainLayout>
-                        <RequestDetail />
-                      </MainLayout>
-                    } 
-                  />
-                  <Route 
-                    path="/requests/:id/edit" 
-                    element={
-                      <MainLayout>
-                        <EditRequest />
-                      </MainLayout>
-                    } 
-                  />
-                  <Route 
-                    path="/jobs" 
-                    element={
-                      <MainLayout>
-                        <Jobs />
-                      </MainLayout>
-                    } 
-                  />
-                  <Route 
-                    path="/jobs/new" 
-                    element={
-                      <MainLayout>
-                        <NewJob />
-                      </MainLayout>
-                    } 
-                  />
-                  <Route 
-                    path="/jobs/:id" 
-                    element={
-                      <MainLayout>
-                        <JobDetail />
-                      </MainLayout>
-                    } 
-                  />
-                  <Route 
-                    path="/jobs/:id/edit" 
-                    element={
-                      <MainLayout>
-                        <EditJob />
-                      </MainLayout>
-                    } 
-                  />
-                  <Route 
-                    path="/quotes" 
-                    element={
-                      <MainLayout>
-                        <Quotes />
-                      </MainLayout>
-                    } 
-                  />
-                  <Route 
-                    path="/quotes/new" 
-                    element={
-                      <MainLayout>
-                        <NewQuote />
-                      </MainLayout>
-                    } 
-                  />
-                  <Route 
-                    path="/quotes/:id" 
-                    element={
-                      <MainLayout>
-                        <QuoteDetail />
-                      </MainLayout>
-                    } 
-                  />
-                  <Route 
-                    path="/quotes/:id/edit" 
-                    element={
-                      <MainLayout>
-                        <EditQuote />
-                      </MainLayout>
-                    } 
-                  />
-                  <Route path="*" element={<NotFound />} />
+                  <Route path="/" element={<MainLayout />}>
+                    <Route index element={<Dashboard />} />
+                    <Route path="schedule" element={<Schedule />} />
+                    
+                    <Route path="clients">
+                      <Route index element={<Clients />} />
+                      <Route path=":id" element={<ClientDetail />} />
+                      <Route path="new" element={<NewClient />} />
+                      <Route path=":id/edit" element={<EditClient />} />
+                    </Route>
+                    
+                    <Route path="requests">
+                      <Route index element={<Requests />} />
+                      <Route path=":id" element={<RequestDetail />} />
+                      <Route path="new" element={<NewRequest />} />
+                      <Route path=":id/edit" element={<EditRequest />} />
+                    </Route>
+                    
+                    <Route path="quotes">
+                      <Route index element={<Quotes />} />
+                      <Route path=":id" element={<QuoteDetail />} />
+                      <Route path="new" element={<NewQuote />} />
+                      <Route path=":id/edit" element={<EditQuote />} />
+                    </Route>
+                    
+                    <Route path="jobs">
+                      <Route index element={<Jobs />} />
+                      <Route path=":id" element={<JobDetail />} />
+                      <Route path="new" element={<NewJob />} />
+                      <Route path=":id/edit" element={<EditJob />} />
+                    </Route>
+                    
+                    <Route path="invoices">
+                      <Route index element={<Invoices />} />
+                      <Route path=":id" element={<InvoiceDetail />} />
+                      <Route path="new" element={<NewInvoice />} />
+                      <Route path=":id/edit" element={<EditInvoice />} />
+                    </Route>
+                    
+                    <Route path="*" element={<NotFound />} />
+                  </Route>
                 </Routes>
-              </BrowserRouter>
-            </TooltipProvider>
-          </JobProvider>
+                <Toaster />
+              </InvoiceProvider>
+            </JobProvider>
+          </QuoteProvider>
         </RequestProvider>
-      </QuoteProvider>
-    </ClientProvider>
-  </QueryClientProvider>
-);
+      </ClientProvider>
+    </Router>
+  );
+}
 
 export default App;
