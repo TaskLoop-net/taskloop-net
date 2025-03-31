@@ -19,10 +19,15 @@ import Requests from "./pages/Requests";
 import NewRequest from "./pages/NewRequest";
 import RequestDetail from "./pages/RequestDetail";
 import EditRequest from "./pages/EditRequest";
+import Jobs from "./pages/Jobs";
+import NewJob from "./pages/NewJob";
+import JobDetail from "./pages/JobDetail";
+import EditJob from "./pages/EditJob";
 import NotFound from "./pages/NotFound";
 import { ClientProvider } from "./contexts/ClientContext";
 import { QuoteProvider } from "./contexts/QuoteContext";
 import { RequestProvider } from "./contexts/RequestContext";
+import { JobProvider } from "./contexts/JobContext";
 
 const queryClient = new QueryClient();
 
@@ -31,127 +36,161 @@ const App = () => (
     <ClientProvider>
       <QuoteProvider>
         <RequestProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <Routes>
-                <Route 
-                  path="/" 
-                  element={
-                    <MainLayout>
-                      <Dashboard />
-                    </MainLayout>
-                  } 
-                />
-                <Route 
-                  path="/schedule" 
-                  element={
-                    <MainLayout>
-                      <Schedule />
-                    </MainLayout>
-                  } 
-                />
-                <Route 
-                  path="/clients" 
-                  element={
-                    <MainLayout>
-                      <Clients />
-                    </MainLayout>
-                  } 
-                />
-                <Route 
-                  path="/clients/new" 
-                  element={
-                    <MainLayout>
-                      <NewClient />
-                    </MainLayout>
-                  } 
-                />
-                <Route 
-                  path="/clients/:id" 
-                  element={
-                    <MainLayout>
-                      <ClientDetail />
-                    </MainLayout>
-                  } 
-                />
-                <Route 
-                  path="/clients/:id/edit" 
-                  element={
-                    <MainLayout>
-                      <EditClient />
-                    </MainLayout>
-                  } 
-                />
-                <Route 
-                  path="/requests" 
-                  element={
-                    <MainLayout>
-                      <Requests />
-                    </MainLayout>
-                  } 
-                />
-                <Route 
-                  path="/requests/new" 
-                  element={
-                    <MainLayout>
-                      <NewRequest />
-                    </MainLayout>
-                  } 
-                />
-                <Route 
-                  path="/requests/:id" 
-                  element={
-                    <MainLayout>
-                      <RequestDetail />
-                    </MainLayout>
-                  } 
-                />
-                <Route 
-                  path="/requests/:id/edit" 
-                  element={
-                    <MainLayout>
-                      <EditRequest />
-                    </MainLayout>
-                  } 
-                />
-                <Route 
-                  path="/quotes" 
-                  element={
-                    <MainLayout>
-                      <Quotes />
-                    </MainLayout>
-                  } 
-                />
-                <Route 
-                  path="/quotes/new" 
-                  element={
-                    <MainLayout>
-                      <NewQuote />
-                    </MainLayout>
-                  } 
-                />
-                <Route 
-                  path="/quotes/:id" 
-                  element={
-                    <MainLayout>
-                      <QuoteDetail />
-                    </MainLayout>
-                  } 
-                />
-                <Route 
-                  path="/quotes/:id/edit" 
-                  element={
-                    <MainLayout>
-                      <EditQuote />
-                    </MainLayout>
-                  } 
-                />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
-          </TooltipProvider>
+          <JobProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <Routes>
+                  <Route 
+                    path="/" 
+                    element={
+                      <MainLayout>
+                        <Dashboard />
+                      </MainLayout>
+                    } 
+                  />
+                  <Route 
+                    path="/schedule" 
+                    element={
+                      <MainLayout>
+                        <Schedule />
+                      </MainLayout>
+                    } 
+                  />
+                  <Route 
+                    path="/clients" 
+                    element={
+                      <MainLayout>
+                        <Clients />
+                      </MainLayout>
+                    } 
+                  />
+                  <Route 
+                    path="/clients/new" 
+                    element={
+                      <MainLayout>
+                        <NewClient />
+                      </MainLayout>
+                    } 
+                  />
+                  <Route 
+                    path="/clients/:id" 
+                    element={
+                      <MainLayout>
+                        <ClientDetail />
+                      </MainLayout>
+                    } 
+                  />
+                  <Route 
+                    path="/clients/:id/edit" 
+                    element={
+                      <MainLayout>
+                        <EditClient />
+                      </MainLayout>
+                    } 
+                  />
+                  <Route 
+                    path="/requests" 
+                    element={
+                      <MainLayout>
+                        <Requests />
+                      </MainLayout>
+                    } 
+                  />
+                  <Route 
+                    path="/requests/new" 
+                    element={
+                      <MainLayout>
+                        <NewRequest />
+                      </MainLayout>
+                    } 
+                  />
+                  <Route 
+                    path="/requests/:id" 
+                    element={
+                      <MainLayout>
+                        <RequestDetail />
+                      </MainLayout>
+                    } 
+                  />
+                  <Route 
+                    path="/requests/:id/edit" 
+                    element={
+                      <MainLayout>
+                        <EditRequest />
+                      </MainLayout>
+                    } 
+                  />
+                  <Route 
+                    path="/jobs" 
+                    element={
+                      <MainLayout>
+                        <Jobs />
+                      </MainLayout>
+                    } 
+                  />
+                  <Route 
+                    path="/jobs/new" 
+                    element={
+                      <MainLayout>
+                        <NewJob />
+                      </MainLayout>
+                    } 
+                  />
+                  <Route 
+                    path="/jobs/:id" 
+                    element={
+                      <MainLayout>
+                        <JobDetail />
+                      </MainLayout>
+                    } 
+                  />
+                  <Route 
+                    path="/jobs/:id/edit" 
+                    element={
+                      <MainLayout>
+                        <EditJob />
+                      </MainLayout>
+                    } 
+                  />
+                  <Route 
+                    path="/quotes" 
+                    element={
+                      <MainLayout>
+                        <Quotes />
+                      </MainLayout>
+                    } 
+                  />
+                  <Route 
+                    path="/quotes/new" 
+                    element={
+                      <MainLayout>
+                        <NewQuote />
+                      </MainLayout>
+                    } 
+                  />
+                  <Route 
+                    path="/quotes/:id" 
+                    element={
+                      <MainLayout>
+                        <QuoteDetail />
+                      </MainLayout>
+                    } 
+                  />
+                  <Route 
+                    path="/quotes/:id/edit" 
+                    element={
+                      <MainLayout>
+                        <EditQuote />
+                      </MainLayout>
+                    } 
+                  />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </BrowserRouter>
+            </TooltipProvider>
+          </JobProvider>
         </RequestProvider>
       </QuoteProvider>
     </ClientProvider>
