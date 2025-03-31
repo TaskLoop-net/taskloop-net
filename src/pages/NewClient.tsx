@@ -55,8 +55,16 @@ const NewClientPage = () => {
     setIsSubmitting(true);
     
     try {
+      // Explicitly type values as NewClient to ensure type safety
       const newClient: NewClient = {
-        ...values
+        name: values.name,
+        email: values.email,
+        phone: values.phone,
+        address: values.address,
+        city: values.city,
+        state: values.state,
+        zip: values.zip,
+        notes: values.notes,
       };
       
       const client = addClient(newClient);
