@@ -17,6 +17,8 @@ export interface Invoice {
   updatedAt: Date;
   subject?: string;
   balance: number;
+  billingAddress?: string;
+  propertyAddress?: string;
 }
 
 export interface InvoiceItem {
@@ -26,6 +28,7 @@ export interface InvoiceItem {
   quantity: number;
   unitPrice: number;
   total: number;
+  serviceDate?: Date;
 }
 
 export type InvoiceStatus = 'draft' | 'sent' | 'paid' | 'past_due';

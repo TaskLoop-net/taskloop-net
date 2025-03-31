@@ -35,6 +35,10 @@ export const InvoiceProvider: React.FC<{ children: React.ReactNode }> = ({ child
         dueDate: new Date(invoice.dueDate),
         createdAt: new Date(invoice.createdAt),
         updatedAt: new Date(invoice.updatedAt),
+        items: invoice.items.map((item: any) => ({
+          ...item,
+          serviceDate: item.serviceDate ? new Date(item.serviceDate) : undefined
+        }))
       }));
     }
     return [];
