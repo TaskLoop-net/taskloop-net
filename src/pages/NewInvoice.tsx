@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -38,6 +37,7 @@ const invoiceFormSchema = z.object({
 type InvoiceFormValues = z.infer<typeof invoiceFormSchema>;
 
 const NewInvoice = () => {
+  
   const navigate = useNavigate();
   const { addInvoice, getNextInvoiceNumber } = useInvoices();
   const { clients } = useClients();
@@ -68,6 +68,7 @@ const NewInvoice = () => {
     ? jobs.filter(job => job.clientId === selectedClientId)
     : [];
 
+  
   const onClientChange = (clientId: string) => {
     setSelectedClientId(clientId);
     form.setValue('clientId', clientId);
@@ -367,11 +368,12 @@ const NewInvoice = () => {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="">None</SelectItem>
+                              {/* Fix: Replace empty string with a non-empty value */}
+                              <SelectItem value="none">None</SelectItem>
                               {!selectedClientId ? (
-                                <SelectItem value="none" disabled>Select a client first</SelectItem>
+                                <SelectItem value="select-client" disabled>Select a client first</SelectItem>
                               ) : filteredJobs.length === 0 ? (
-                                <SelectItem value="none" disabled>No jobs for this client</SelectItem>
+                                <SelectItem value="no-jobs" disabled>No jobs for this client</SelectItem>
                               ) : (
                                 filteredJobs.map(job => (
                                   <SelectItem key={job.id} value={job.id}>

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -97,7 +96,6 @@ const EditInvoice = () => {
     setSelectedClientId(clientId);
     form.setValue('clientId', clientId);
     
-    // Set billing address if client is selected and no address already exists
     const client = clients.find(c => c.id === clientId);
     if (client && client.address && !form.getValues().billingAddress) {
       form.setValue('billingAddress', client.address);
@@ -106,7 +104,6 @@ const EditInvoice = () => {
       }
     }
     
-    // Clear job selection when changing client
     form.setValue('jobId', undefined);
   };
 
@@ -128,7 +125,6 @@ const EditInvoice = () => {
         if (item.id === id) {
           const updatedItem = { ...item, [field]: value };
           
-          // Automatically update total when quantity or unitPrice changes
           if (field === 'quantity' || field === 'unitPrice') {
             updatedItem.total = updatedItem.quantity * updatedItem.unitPrice;
           }
@@ -160,7 +156,6 @@ const EditInvoice = () => {
   const populateItemsFromJob = (jobId: string) => {
     const job = jobs.find(j => j.id === jobId);
     if (job && job.lineItems) {
-      // Convert job line items to invoice items
       const newInvoiceItems: InvoiceItem[] = job.lineItems.map(item => ({
         id: crypto.randomUUID(),
         name: item.name,
@@ -201,8 +196,11 @@ const EditInvoice = () => {
       const tax = calculateTax();
       const total = calculateTotal();
       
-      // If status is changing to paid, set balance to 0
-      const newBalance = values.status === 'paid' ? 0 : total;
+      if (values.status === 'paid') {
+        values.balance = 0;
+      } else {
+        values.balance = total;
+      }
       
       updateInvoice(invoice.id, {
         ...values,
@@ -210,7 +208,7 @@ const EditInvoice = () => {
         subtotal,
         tax,
         total,
-        balance: newBalance
+        balance: values.balance
       });
       
       toast({
@@ -388,9 +386,9 @@ const EditInvoice = () => {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="">None</SelectItem>
+                              <SelectItem value="none">None</SelectItem>
                               {filteredJobs.length === 0 ? (
-                                <SelectItem value="none" disabled>No jobs for this client</SelectItem>
+                                <SelectItem value="no-jobs" disabled>No jobs for this client</SelectItem>
                               ) : (
                                 filteredJobs.map(job => (
                                   <SelectItem key={job.id} value={job.id}>
@@ -549,7 +547,6 @@ const EditInvoice = () => {
                             size="sm" 
                             className="h-auto p-0 text-xs"
                             onClick={() => {
-                              // Open date picker for service date
                               const now = new Date();
                               updateInvoiceItem(item.id, 'serviceDate', now);
                             }}
