@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Calendar, Clock, Map, List } from 'lucide-react';
+import { Calendar, Clock, Map, List, ChevronDown } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,7 +8,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ChevronDown } from 'lucide-react';
 
 interface ViewSelectorProps {
   currentView: string;
@@ -29,7 +28,8 @@ const ViewSelector = ({ currentView, onViewChange }: ViewSelectorProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="flex items-center gap-2">
+        <Button variant="outline" className="flex items-center gap-2 bg-white">
+          {currentViewData.icon}
           {currentViewData.name}
           <ChevronDown className="h-4 w-4" />
         </Button>
@@ -39,7 +39,7 @@ const ViewSelector = ({ currentView, onViewChange }: ViewSelectorProps) => {
           <DropdownMenuItem 
             key={view.id} 
             onClick={() => onViewChange(view.id)}
-            className="flex items-center gap-2 cursor-pointer"
+            className={`flex items-center gap-2 cursor-pointer ${currentView === view.id ? 'bg-gray-100' : ''}`}
           >
             {view.icon}
             {view.name}

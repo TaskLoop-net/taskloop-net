@@ -14,7 +14,6 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import { Link } from 'react-router-dom';
 
 type DayContextMenuProps = {
   children: React.ReactNode;
@@ -51,19 +50,19 @@ const DayContextMenu = ({
           Add to {month} {day}
         </div>
         <ContextMenuItem onClick={onCreateJob} className="flex items-center gap-2 cursor-pointer">
-          <Briefcase size={16} />
+          <Briefcase size={16} className="text-green-600" />
           <span>New Job</span>
         </ContextMenuItem>
         <ContextMenuItem onClick={onCreateRequest} className="flex items-center gap-2 cursor-pointer">
-          <FileText size={16} />
+          <FileText size={16} className="text-amber-600" />
           <span>New Request</span>
         </ContextMenuItem>
         <ContextMenuItem onClick={onCreateTask} className="flex items-center gap-2 cursor-pointer">
-          <ClipboardList size={16} />
+          <ClipboardList size={16} className="text-purple-600" />
           <span>New Task</span>
         </ContextMenuItem>
         <ContextMenuItem onClick={onCreateCalendarEvent} className="flex items-center gap-2 cursor-pointer">
-          <CalendarIcon size={16} />
+          <CalendarIcon size={16} className="text-blue-600" />
           <span>New Calendar Event</span>
         </ContextMenuItem>
         <div className="h-px bg-gray-200 my-1.5" />
