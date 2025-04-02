@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -32,6 +33,7 @@ const invoiceFormSchema = z.object({
   terms: z.string().optional(),
   billingAddress: z.string().optional(),
   propertyAddress: z.string().optional(),
+  balance: z.number().optional(), // Added balance to the schema
 });
 
 type InvoiceFormValues = z.infer<typeof invoiceFormSchema>;

@@ -32,6 +32,7 @@ const invoiceFormSchema = z.object({
   terms: z.string().optional(),
   billingAddress: z.string().optional(),
   propertyAddress: z.string().optional(),
+  balance: z.number().optional(),
 });
 
 type InvoiceFormValues = z.infer<typeof invoiceFormSchema>;
