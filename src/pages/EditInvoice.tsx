@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useInvoices } from '@/contexts/InvoiceContext';
 import { useClients } from '@/contexts/ClientContext';
 import { useJobs } from '@/contexts/JobContext';
+import { useInvoiceValidation } from '@/hooks/useInvoiceValidation';
 import type { Invoice, InvoiceItem } from '@/types/invoice';
 
 import InvoiceForm, { InvoiceFormValues } from '@/components/invoices/InvoiceForm';
@@ -20,6 +21,7 @@ const EditInvoice = () => {
   const { clients } = useClients();
   const { jobs } = useJobs();
   const { toast } = useToast();
+  const { validateInvoice } = useInvoiceValidation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [invoiceItems, setInvoiceItems] = useState<InvoiceItem[]>([]);
   const [selectedClientId, setSelectedClientId] = useState<string>("");
@@ -129,6 +131,11 @@ const EditInvoice = () => {
 
   const onSubmit = async (values: InvoiceFormValues) => {
     if (!invoice || !id) return;
+    
+    // Use the validation hook to validate invoice items
+    if (!validateInvoice(invoiceItems)) {
+      return;
+    }
     
     setIsSubmitting(true);
     

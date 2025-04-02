@@ -10,6 +10,7 @@ import { useInvoices } from '@/contexts/InvoiceContext';
 import { useClients } from '@/contexts/ClientContext';
 import { useJobs } from '@/contexts/JobContext';
 import { useInvoiceForm } from '@/hooks/useInvoiceForm';
+import { useInvoiceValidation } from '@/hooks/useInvoiceValidation';
 import { InvoiceFormValues, invoiceFormSchema } from '@/components/invoices/InvoiceForm';
 import InvoiceForm from '@/components/invoices/InvoiceForm';
 
@@ -22,6 +23,7 @@ const NewInvoice = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState<string>("");
   const [invoiceNumber, setInvoiceNumber] = useState<string>("");
+  const { validateInvoice } = useInvoiceValidation();
   
   // Use the shared hook for invoice items management
   const {
@@ -81,21 +83,8 @@ const NewInvoice = () => {
   };
 
   const onSubmit = async (values: InvoiceFormValues) => {
-    if (invoiceItems.length === 0) {
-      toast({
-        title: "No items added",
-        description: "Please add at least one item to the invoice.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (invoiceItems.some(item => !item.name)) {
-      toast({
-        title: "Incomplete items",
-        description: "All invoice items must have a name.",
-        variant: "destructive",
-      });
+    // Use the validation hook to validate invoice items
+    if (!validateInvoice(invoiceItems)) {
       return;
     }
     

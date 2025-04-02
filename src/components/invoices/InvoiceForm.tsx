@@ -86,24 +86,6 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
   });
 
   const handleFormSubmit = (values: InvoiceFormValues) => {
-    if (invoiceItems.length === 0) {
-      toast({
-        title: "No items added",
-        description: "Please add at least one item to the invoice.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (invoiceItems.some(item => !item.name)) {
-      toast({
-        title: "Incomplete items",
-        description: "All invoice items must have a name.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
     onSubmit(values);
   };
 
