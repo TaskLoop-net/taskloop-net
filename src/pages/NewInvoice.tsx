@@ -11,7 +11,7 @@ import { useClients } from '@/contexts/ClientContext';
 import { useJobs } from '@/contexts/JobContext';
 import { useInvoiceForm } from '@/hooks/useInvoiceForm';
 import { useInvoiceValidation } from '@/hooks/useInvoiceValidation';
-import { InvoiceFormValues, invoiceFormSchema } from '@/components/invoices/InvoiceForm';
+import { InvoiceFormValues } from '@/components/invoices/InvoiceForm';
 import InvoiceForm from '@/components/invoices/InvoiceForm';
 
 const NewInvoice = () => {
@@ -29,10 +29,15 @@ const NewInvoice = () => {
   const {
     invoiceItems,
     setInvoiceItems,
+    discount,
+    setDiscount,
+    tax,
+    setTax,
     addInvoiceItem,
     updateInvoiceItem,
     removeInvoiceItem,
     calculateSubtotal,
+    calculateDiscountAmount,
     calculateTax,
     calculateTotal
   } = useInvoiceForm();
@@ -92,7 +97,8 @@ const NewInvoice = () => {
     
     try {
       const subtotal = calculateSubtotal();
-      const tax = calculateTax();
+      const discountAmount = calculateDiscountAmount();
+      const taxAmount = calculateTax();
       const total = calculateTotal();
       
       const invoice = addInvoice({
@@ -103,7 +109,7 @@ const NewInvoice = () => {
         dueDate: values.dueDate,
         items: invoiceItems,
         subtotal,
-        tax,
+        tax: tax || 0,
         total,
         status: values.status,
         notes: values.notes,
@@ -111,7 +117,8 @@ const NewInvoice = () => {
         subject: values.subject,
         balance: total, // Initially, balance equals total
         billingAddress: values.billingAddress,
-        propertyAddress: values.propertyAddress
+        propertyAddress: values.propertyAddress,
+        discount: discount
       });
       
       toast({
@@ -179,6 +186,10 @@ const NewInvoice = () => {
             calculateSubtotal={calculateSubtotal}
             calculateTax={calculateTax}
             calculateTotal={calculateTotal}
+            discount={discount}
+            setDiscount={setDiscount}
+            tax={tax}
+            setTax={setTax}
           />
         </CardContent>
       </Card>

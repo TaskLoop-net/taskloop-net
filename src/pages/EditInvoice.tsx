@@ -10,6 +10,7 @@ import { useInvoices } from '@/contexts/InvoiceContext';
 import { useClients } from '@/contexts/ClientContext';
 import { useJobs } from '@/contexts/JobContext';
 import { useInvoiceValidation } from '@/hooks/useInvoiceValidation';
+import { useInvoiceForm } from '@/hooks/useInvoiceForm';
 import type { Invoice, InvoiceItem } from '@/types/invoice';
 
 import InvoiceForm, { InvoiceFormValues } from '@/components/invoices/InvoiceForm';
@@ -23,9 +24,26 @@ const EditInvoice = () => {
   const { toast } = useToast();
   const { validateInvoice } = useInvoiceValidation();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [invoiceItems, setInvoiceItems] = useState<InvoiceItem[]>([]);
   const [selectedClientId, setSelectedClientId] = useState<string>("");
   const [invoice, setInvoice] = useState<Invoice | null>(null);
+
+  // Initialize with invoice data if available
+  const initialTax = invoice?.tax || 0;
+  const {
+    invoiceItems,
+    setInvoiceItems,
+    discount,
+    setDiscount,
+    tax,
+    setTax,
+    addInvoiceItem,
+    updateInvoiceItem,
+    removeInvoiceItem,
+    calculateSubtotal,
+    calculateDiscountAmount,
+    calculateTax,
+    calculateTotal
+  } = useInvoiceForm([], initialTax);
 
   useEffect(() => {
     if (id) {
@@ -34,6 +52,11 @@ const EditInvoice = () => {
         setInvoice(invoiceData);
         setInvoiceItems(invoiceData.items || []);
         setSelectedClientId(invoiceData.clientId);
+        
+        // Set tax if available
+        if (invoiceData.tax) {
+          setTax(invoiceData.tax);
+        }
       } else {
         toast({
           title: "Invoice not found",
@@ -43,7 +66,7 @@ const EditInvoice = () => {
         navigate('/invoices');
       }
     }
-  }, [id, getInvoiceById, navigate, toast]);
+  }, [id, getInvoiceById, navigate, toast, setInvoiceItems, setTax]);
 
   const filteredJobs = selectedClientId 
     ? jobs.filter(job => job.clientId === selectedClientId)
@@ -66,52 +89,6 @@ const EditInvoice = () => {
         setInvoice(updatedInvoice);
       }
     }
-  };
-
-  const addInvoiceItem = () => {
-    const newItem: InvoiceItem = {
-      id: crypto.randomUUID(),
-      name: "",
-      description: "",
-      quantity: 1,
-      unitPrice: 0,
-      total: 0
-    };
-    setInvoiceItems([...invoiceItems, newItem]);
-  };
-
-  const updateInvoiceItem = (id: string, field: keyof InvoiceItem, value: any) => {
-    setInvoiceItems(prevItems => {
-      const updatedItems = prevItems.map(item => {
-        if (item.id === id) {
-          const updatedItem = { ...item, [field]: value };
-          
-          if (field === 'quantity' || field === 'unitPrice') {
-            updatedItem.total = updatedItem.quantity * updatedItem.unitPrice;
-          }
-          
-          return updatedItem;
-        }
-        return item;
-      });
-      return updatedItems;
-    });
-  };
-
-  const removeInvoiceItem = (id: string) => {
-    setInvoiceItems(prevItems => prevItems.filter(item => item.id !== id));
-  };
-
-  const calculateSubtotal = () => {
-    return invoiceItems.reduce((sum, item) => sum + item.total, 0);
-  };
-
-  const calculateTax = () => {
-    return invoice?.tax || 0;
-  };
-
-  const calculateTotal = () => {
-    return calculateSubtotal() + calculateTax();
   };
 
   const populateItemsFromJob = (jobId: string) => {
@@ -141,7 +118,8 @@ const EditInvoice = () => {
     
     try {
       const subtotal = calculateSubtotal();
-      const tax = calculateTax();
+      const discountAmount = calculateDiscountAmount();
+      const taxAmount = calculateTax();
       const total = calculateTotal();
       
       if (values.status === 'paid') {
@@ -154,9 +132,10 @@ const EditInvoice = () => {
         ...values,
         items: invoiceItems,
         subtotal,
-        tax,
+        tax: tax,
         total,
-        balance: values.balance
+        balance: values.balance,
+        discount: discount
       });
       
       toast({
@@ -237,6 +216,10 @@ const EditInvoice = () => {
             calculateSubtotal={calculateSubtotal}
             calculateTax={calculateTax}
             calculateTotal={calculateTotal}
+            discount={discount}
+            setDiscount={setDiscount}
+            tax={tax}
+            setTax={setTax}
           />
         </CardContent>
       </Card>

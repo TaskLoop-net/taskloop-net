@@ -50,6 +50,13 @@ interface InvoiceFormProps {
   calculateSubtotal: () => number;
   calculateTax: () => number;
   calculateTotal: () => number;
+  discount?: {
+    type: 'percentage' | 'fixed';
+    value: number;
+  };
+  setDiscount?: (discount: { type: 'percentage' | 'fixed'; value: number } | undefined) => void;
+  tax?: number;
+  setTax?: (tax: number) => void;
 }
 
 const InvoiceForm: React.FC<InvoiceFormProps> = ({
@@ -73,6 +80,10 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
   calculateSubtotal,
   calculateTax,
   calculateTotal,
+  discount,
+  setDiscount,
+  tax,
+  setTax
 }) => {
   const { toast } = useToast();
   const form = useForm<InvoiceFormValues>({
@@ -118,6 +129,10 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
             calculateSubtotal={calculateSubtotal}
             calculateTax={calculateTax}
             calculateTotal={calculateTotal}
+            discount={discount}
+            setDiscount={setDiscount}
+            tax={tax}
+            setTax={setTax}
           />
         </div>
         

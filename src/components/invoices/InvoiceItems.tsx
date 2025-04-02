@@ -1,10 +1,21 @@
 
-import React from 'react';
-import { Plus, Trash2, Eye } from 'lucide-react';
+import React, { useState } from 'react';
+import { Plus, Trash2, Eye, Percent, Receipt } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { InvoiceItem } from '@/types/invoice';
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { FormItem, FormLabel, FormControl } from '@/components/ui/form';
 
 interface InvoiceItemsProps {
   invoiceItems: InvoiceItem[];
@@ -14,6 +25,13 @@ interface InvoiceItemsProps {
   calculateSubtotal: () => number;
   calculateTax: () => number;
   calculateTotal: () => number;
+  discount?: {
+    type: 'percentage' | 'fixed';
+    value: number;
+  };
+  setDiscount?: (discount: { type: 'percentage' | 'fixed'; value: number } | undefined) => void;
+  tax?: number;
+  setTax?: (tax: number) => void;
 }
 
 const InvoiceItems: React.FC<InvoiceItemsProps> = ({
@@ -23,8 +41,68 @@ const InvoiceItems: React.FC<InvoiceItemsProps> = ({
   addInvoiceItem,
   calculateSubtotal,
   calculateTax,
-  calculateTotal
+  calculateTotal,
+  discount,
+  setDiscount,
+  tax,
+  setTax
 }) => {
+  const [isDiscountDialogOpen, setIsDiscountDialogOpen] = useState(false);
+  const [isTaxDialogOpen, setIsTaxDialogOpen] = useState(false);
+  
+  const [discountType, setDiscountType] = useState<'percentage' | 'fixed'>(
+    discount?.type || 'percentage'
+  );
+  const [discountValue, setDiscountValue] = useState<number>(
+    discount?.value || 0
+  );
+  
+  const [taxRate, setTaxRate] = useState<number>(tax || 0);
+  
+  const handleApplyDiscount = () => {
+    if (setDiscount) {
+      setDiscount({
+        type: discountType,
+        value: discountValue
+      });
+    }
+    setIsDiscountDialogOpen(false);
+  };
+  
+  const handleRemoveDiscount = () => {
+    if (setDiscount) {
+      setDiscount(undefined);
+    }
+    setDiscountValue(0);
+    setIsDiscountDialogOpen(false);
+  };
+  
+  const handleApplyTax = () => {
+    if (setTax) {
+      setTax(taxRate);
+    }
+    setIsTaxDialogOpen(false);
+  };
+  
+  const handleRemoveTax = () => {
+    if (setTax) {
+      setTax(0);
+    }
+    setTaxRate(0);
+    setIsTaxDialogOpen(false);
+  };
+  
+  const calculateDiscountAmount = () => {
+    if (!discount) return 0;
+    
+    const subtotal = calculateSubtotal();
+    if (discount.type === 'percentage') {
+      return subtotal * (discount.value / 100);
+    } else {
+      return discount.value;
+    }
+  };
+
   return (
     <div className="border-t pt-6">
       <div className="flex items-center justify-between mb-4">
@@ -125,8 +203,145 @@ const InvoiceItems: React.FC<InvoiceItemsProps> = ({
           calculateSubtotal={calculateSubtotal} 
           calculateTax={calculateTax} 
           calculateTotal={calculateTotal}
+          discount={discount}
+          calculateDiscountAmount={calculateDiscountAmount}
+          onAddDiscountClick={() => setIsDiscountDialogOpen(true)}
+          onAddTaxClick={() => setIsTaxDialogOpen(true)}
         />
       </div>
+
+      {/* Discount Dialog */}
+      <Dialog open={isDiscountDialogOpen} onOpenChange={setIsDiscountDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Discount</DialogTitle>
+            <DialogDescription>
+              Apply a discount to this invoice
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <RadioGroup 
+              value={discountType} 
+              onValueChange={(value) => setDiscountType(value as 'percentage' | 'fixed')}
+              className="space-y-2"
+            >
+              <FormItem className="flex items-center space-x-3 space-y-0">
+                <FormControl>
+                  <RadioGroupItem value="percentage" />
+                </FormControl>
+                <FormLabel className="font-normal">Percentage (%)</FormLabel>
+              </FormItem>
+              <FormItem className="flex items-center space-x-3 space-y-0">
+                <FormControl>
+                  <RadioGroupItem value="fixed" />
+                </FormControl>
+                <FormLabel className="font-normal">Fixed Amount ($)</FormLabel>
+              </FormItem>
+            </RadioGroup>
+            
+            <div className="space-y-2">
+              <Label htmlFor="discountValue">
+                {discountType === 'percentage' ? 'Discount Percentage' : 'Discount Amount'}
+              </Label>
+              <div className="flex items-center">
+                {discountType === 'percentage' ? (
+                  <>
+                    <Input
+                      id="discountValue"
+                      type="number"
+                      min="0"
+                      max={discountType === 'percentage' ? '100' : undefined}
+                      step="0.01"
+                      value={discountValue}
+                      onChange={(e) => setDiscountValue(Number(e.target.value))}
+                    />
+                    <span className="ml-2">%</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="mr-2">$</span>
+                    <Input
+                      id="discountValue"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={discountValue}
+                      onChange={(e) => setDiscountValue(Number(e.target.value))}
+                    />
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+          
+          <DialogFooter className="space-x-2">
+            {discount && (
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={handleRemoveDiscount}
+              >
+                Remove Discount
+              </Button>
+            )}
+            <Button 
+              type="button" 
+              onClick={handleApplyDiscount}
+            >
+              Apply Discount
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Tax Dialog */}
+      <Dialog open={isTaxDialogOpen} onOpenChange={setIsTaxDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Tax</DialogTitle>
+            <DialogDescription>
+              Apply tax to this invoice
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="taxRate">Tax Rate (%)</Label>
+              <div className="flex items-center">
+                <Input
+                  id="taxRate"
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="0.01"
+                  value={taxRate}
+                  onChange={(e) => setTaxRate(Number(e.target.value))}
+                />
+                <span className="ml-2">%</span>
+              </div>
+            </div>
+          </div>
+          
+          <DialogFooter className="space-x-2">
+            {tax && tax > 0 && (
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={handleRemoveTax}
+              >
+                Remove Tax
+              </Button>
+            )}
+            <Button 
+              type="button" 
+              onClick={handleApplyTax}
+            >
+              Apply Tax
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
@@ -135,35 +350,59 @@ interface InvoiceTotalsProps {
   calculateSubtotal: () => number;
   calculateTax: () => number;
   calculateTotal: () => number;
+  discount?: {
+    type: 'percentage' | 'fixed';
+    value: number;
+  };
+  calculateDiscountAmount: () => number;
+  onAddDiscountClick: () => void;
+  onAddTaxClick: () => void;
 }
 
 const InvoiceTotals: React.FC<InvoiceTotalsProps> = ({ 
   calculateSubtotal, 
   calculateTax, 
-  calculateTotal 
+  calculateTotal,
+  discount,
+  calculateDiscountAmount,
+  onAddDiscountClick,
+  onAddTaxClick
 }) => {
+  const subtotal = calculateSubtotal();
+  const discountAmount = calculateDiscountAmount();
+  const taxAmount = calculateTax();
+  const total = calculateTotal();
+  
   return (
     <div className="flex justify-end mt-4">
       <div className="w-64">
         <div className="flex justify-between px-4 py-2">
           <span>Subtotal:</span>
-          <span>${calculateSubtotal().toFixed(2)}</span>
+          <span>${subtotal.toFixed(2)}</span>
         </div>
         <div className="flex justify-between px-4 py-2">
           <span>Discount:</span>
-          <Button variant="link" className="h-auto p-0 text-sm">
-            Add Discount
-          </Button>
+          {discount ? (
+            <span className="text-green-600">-${discountAmount.toFixed(2)}</span>
+          ) : (
+            <Button variant="link" className="h-auto p-0 text-sm" onClick={onAddDiscountClick}>
+              Add Discount
+            </Button>
+          )}
         </div>
         <div className="flex justify-between px-4 py-2">
           <span>Tax:</span>
-          <Button variant="link" className="h-auto p-0 text-sm">
-            Add Tax
-          </Button>
+          {taxAmount > 0 ? (
+            <span>${taxAmount.toFixed(2)}</span>
+          ) : (
+            <Button variant="link" className="h-auto p-0 text-sm" onClick={onAddTaxClick}>
+              Add Tax
+            </Button>
+          )}
         </div>
         <div className="flex justify-between px-4 py-2 font-medium border-t">
           <span>Total:</span>
-          <span>${calculateTotal().toFixed(2)}</span>
+          <span>${total.toFixed(2)}</span>
         </div>
       </div>
     </div>

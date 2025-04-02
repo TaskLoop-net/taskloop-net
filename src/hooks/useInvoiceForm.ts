@@ -4,6 +4,8 @@ import { InvoiceItem } from '@/types/invoice';
 
 export const useInvoiceForm = (initialItems: InvoiceItem[] = [], initialTax: number = 0) => {
   const [invoiceItems, setInvoiceItems] = useState<InvoiceItem[]>(initialItems);
+  const [discount, setDiscount] = useState<{ type: 'percentage' | 'fixed'; value: number } | undefined>(undefined);
+  const [tax, setTax] = useState<number>(initialTax);
 
   const addInvoiceItem = () => {
     const newItem: InvoiceItem = {
@@ -43,21 +45,43 @@ export const useInvoiceForm = (initialItems: InvoiceItem[] = [], initialTax: num
     return invoiceItems.reduce((sum, item) => sum + item.total, 0);
   };
 
+  const calculateDiscountAmount = () => {
+    if (!discount) return 0;
+    
+    const subtotal = calculateSubtotal();
+    if (discount.type === 'percentage') {
+      return subtotal * (discount.value / 100);
+    } else {
+      return discount.value;
+    }
+  };
+
   const calculateTax = () => {
-    return initialTax;
+    const subtotal = calculateSubtotal();
+    const discountAmount = calculateDiscountAmount();
+    return (subtotal - discountAmount) * (tax / 100);
   };
 
   const calculateTotal = () => {
-    return calculateSubtotal() + calculateTax();
+    const subtotal = calculateSubtotal();
+    const discountAmount = calculateDiscountAmount();
+    const taxAmount = calculateTax();
+    
+    return subtotal - discountAmount + taxAmount;
   };
 
   return {
     invoiceItems,
     setInvoiceItems,
+    discount,
+    setDiscount,
+    tax,
+    setTax,
     addInvoiceItem,
     updateInvoiceItem,
     removeInvoiceItem,
     calculateSubtotal,
+    calculateDiscountAmount,
     calculateTax,
     calculateTotal
   };
