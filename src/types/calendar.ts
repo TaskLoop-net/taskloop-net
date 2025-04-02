@@ -1,4 +1,3 @@
-
 export type CalendarEventType = 'job' | 'request' | 'task' | 'event';
 
 export interface CalendarEvent {
@@ -17,4 +16,6 @@ export interface CalendarEvent {
   };
   status?: string;
   color?: string;
+  latitude?: number;
+  longitude?: number;
 }

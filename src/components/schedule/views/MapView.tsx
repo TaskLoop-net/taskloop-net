@@ -1,6 +1,6 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { CalendarEvent } from '@/types/calendar';
+import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 
 interface MapViewProps {
   currentDate: Date;
@@ -12,6 +12,12 @@ const MapView = ({ currentDate, events }: MapViewProps) => {
   const [mapError, setMapError] = useState<string | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
 
+  // Load Google Maps API
+  const { isLoaded, loadError } = useJsApiLoader({
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "", // Ensure you have this in your .env file
+    libraries: ['places'], // Add libraries as needed
+  });
+
   const todaysEvents = events.filter(event => {
     const eventDate = new Date(event.startDate);
     return eventDate.getDate() === currentDate.getDate() && 
@@ -19,15 +25,27 @@ const MapView = ({ currentDate, events }: MapViewProps) => {
            eventDate.getFullYear() === currentDate.getFullYear();
   });
   
-  // This is a placeholder - in a real implementation, we'd use an actual map library like Mapbox or Google Maps
+  // Default map center (e.g., San Francisco) - Adjust as needed
+  const mapCenter = {
+    lat: 37.7749,
+    lng: -122.4194
+  };
+
+  const mapContainerStyle = {
+    width: '100%',
+    height: '100%'
+  };
+
   useEffect(() => {
-    // Mock loading the map
-    const timer = setTimeout(() => {
+    if (loadError) {
+      setMapError(`Map Error: ${loadError.message}`);
+      console.error("Map loading error:", loadError);
+    }
+    if (isLoaded) {
       setMapLoaded(true);
-    }, 500);
-    
-    return () => clearTimeout(timer);
-  }, []);
+      setMapError(null);
+    }
+  }, [isLoaded, loadError]);
 
   return (
     <div className="bg-white border rounded-lg overflow-hidden">
@@ -59,7 +77,7 @@ const MapView = ({ currentDate, events }: MapViewProps) => {
                 <p className="text-sm">{mapError}</p>
               </div>
             </div>
-          ) : !mapLoaded ? (
+          ) : !isLoaded ? (
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
@@ -68,14 +86,22 @@ const MapView = ({ currentDate, events }: MapViewProps) => {
             </div>
           ) : (
             <>
-              <div ref={mapContainerRef} className="h-full w-full bg-gray-100">
-                <div className="p-4 text-center">
-                  <p>Map Placeholder</p>
-                  <p className="text-sm text-gray-500">
-                    This is where a real map would be displayed, showing event locations
-                  </p>
-                </div>
-              </div>
+              <GoogleMap
+                mapContainerStyle={mapContainerStyle}
+                center={mapCenter}
+                zoom={10} // Adjust zoom level as needed
+              >
+                {todaysEvents.map((event, idx) => (
+                  event.latitude && event.longitude ? (
+                    <Marker
+                      key={event.id || idx}
+                      position={{ lat: event.latitude, lng: event.longitude }}
+                      // Add onClick or other props as needed
+                      // title={event.title}
+                    />
+                  ) : null
+                ))}
+              </GoogleMap>
               
               <div className="absolute bottom-4 right-4 bg-white p-2 rounded-md shadow-md">
                 <h4 className="text-sm font-medium mb-1">Visit Pins</h4>
