@@ -19,6 +19,10 @@ export interface Invoice {
   balance: number;
   billingAddress?: string;
   propertyAddress?: string;
+  discount?: {
+    type: 'percentage' | 'fixed';
+    value: number;
+  };
 }
 
 export interface InvoiceItem {
