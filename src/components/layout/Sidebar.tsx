@@ -36,7 +36,8 @@ const Sidebar = () => {
     <div className="w-64 min-h-screen bg-white border-r border-gray-200 flex flex-col">
       <div className="p-4 flex items-center">
         <Link to="/" className="flex items-center">
-          <div className="text-2xl font-bold text-taskloop-gray">Task<span className="text-taskloop-darkgray">Loop</span></div>
+          <img src="/Logo Robusta.png" alt="TaskLoop Logo" className="h-8 w-auto mr-2" />
+          <div className="text-3xl font-bold text-gray-800">TaskLoop</div>
         </Link>
       </div>
       
